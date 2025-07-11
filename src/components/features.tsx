@@ -169,7 +169,7 @@ export default function Component() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
+    <div className="min-h-screen bg-darkBlueCustom relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-20">
         <svg className="w-full h-full" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
@@ -202,17 +202,21 @@ export default function Component() {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">
-          <Button
+        <Button
             variant="ghost"
-            size="sm"
-            className="bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all duration-300 mb-8"
+            size="sm" // Keep sm for base size, adjust padding manually
+            className="bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 mb-4 px-4 py-1 rounded-full"
           >
-            <span className="bg-gradient-to-r from-purple-400 via-purple-300 to-purple-500 bg-clip-text text-transparent font-bold text-2xl md:text-3xl">
+            {" "}
+            {/* Reduced mb-8 to mb-4, added px-4 py-1, and rounded-full */}
+            <span className="bg-gradient-to-r from-purple-400 via-purple-300 to-purple-500 bg-clip-text text-transparent font-bold text-base md:text-lg">
+              {" "}
+              {/* Reduced text-2xl to text-base and md:text-3xl to md:text-lg */}
               Synchronize Protocol
             </span>
           </Button>
 
-          <p className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed">
+          <p className="text-white text-sm md:text-sm max-w-1xl mx-auto mb-12 leading-relaxed">
             This is a technology, not an app, that allows all noncustodial wallets to create a remote resolution.
           </p>
 
@@ -220,7 +224,7 @@ export default function Component() {
             
           </div>
 
-          <h2 className="text-2xl font-semibold text-white mb-12">Make Selection Below</h2>
+          <h2 className="text-1xl text-white mb-12">Make Selection Below</h2>
         </div>
 
         {/* Cards Grid */}
