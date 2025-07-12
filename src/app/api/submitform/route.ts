@@ -70,11 +70,14 @@ export async function POST(request: Request) {
       })
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    return NextResponse.json({ 
+        message: "Connection request submitted successfully! We'll process your request shortly." 
+      })
 
-    return redirect("/pending")
   } catch (err) {
     console.error("Error in form submission API:", err)
     return NextResponse.json({ message: "Failed to process connection request." }, { status: 500 })
   }
+
+
 }
