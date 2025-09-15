@@ -277,6 +277,24 @@ export default function WalletAddress({ network, symbol, color }: WalletAddressP
 
   return (
     <div className="min-h-screen bg-darkBlueCustom relative overflow-hidden">
+      {/* Crypto Ticker */}
+      <div
+        className="bg-black/30 backdrop-blur-sm border-b border-white/10"
+        style={{ height: "40px", padding: 0, margin: 0, width: "100%" }}
+      >
+        <iframe
+          src="https://widget.coinlib.io/widget?type=horizontal_v2&theme=dark&pref_coin_id=1505&invert_hover=no"
+          width="100%"
+          height="36px"
+          scrolling="auto"
+          marginWidth={0}
+          marginHeight={0}
+          frameBorder="0"
+          style={{ border: 0, margin: 0, padding: 0 }}
+          title="Cryptocurrency Price Ticker"
+        />
+      </div>
+
       {/* Background Pattern - Same as homepage */}
       <div className="absolute inset-0 opacity-20">
         <svg className="w-full h-full" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
