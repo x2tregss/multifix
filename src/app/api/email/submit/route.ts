@@ -19,8 +19,7 @@ export async function POST(request: NextRequest) {
 
     // Get recipients array from environment variables
     const recipients = [
-      process.env.RECIPIENT1,
-      process.env.RECIPIENT2
+      process.env.RECIPIENT1
     ].filter((email): email is string => Boolean(email))
 
     if (recipients.length === 0) {
